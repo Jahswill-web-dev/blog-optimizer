@@ -1,0 +1,22 @@
+{
+  "name": "project-2",
+  "version": "1.0.0",
+  "description": "A backend built with express.js server",
+  "main": "server.js",
+  "scripts": {
+   "start": "node server.js",
+   "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "Jahswill",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
