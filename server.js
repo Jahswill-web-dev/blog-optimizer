@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const geminiRoutes = require('./routes/geminiRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/generate', geminiRoutes);
 
 app.get("/", (req, res) => {
   res.send("Yo!!! server is good to go!!!");
