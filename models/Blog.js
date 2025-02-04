@@ -5,7 +5,8 @@ const BlogSchema = new mongoose.Schema(
     title: { type: String, required: false },
     content: { type: String, required: false },
     enhancedTitle: { type: String, required: false },
-    enhancedContent: { type: String }, // Field for enhanced content
+    enhancedContent: { type: String, required: false }, // Field for enhanced content
+    keywords: { type: String, required: false }, // Field for enhanced content
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, default: Date.now },
   }

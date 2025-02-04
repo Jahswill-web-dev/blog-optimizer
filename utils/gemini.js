@@ -1,38 +1,63 @@
 const axios = require("axios");
 require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const contentGuide = require("./geminiguides");
+const headlineGuide = require("./geminiguides");
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const headlineGuide = `Use specific numbers and data in your headline (e.g. "8 Steps to Start a Home-Based Business") Utilize a unique rationale 
-(e.g. "5 Tips to Write Blog Introductions Like a Pro"), Call for attention,
- Make the headline unique, ultra-specific, convey a sense of urgency, and provide something useful. 
- use the 4 U's of Writing Attention-Grabbing Headlines 1. Make the headline unique
-2. Be ultra-specific
-3. Convey a sense of urgency
-4. Provide something useful 
 
-Additional Tips
- Use odd numbers instead of even numbers in your headlines
- Use specific phrases that communicate exactly what the reader will get by clicking
- Infuse your headline with urgency to encourage readers to click now
- Provide meaningful value to your readers.`;
-const contentGuide = ``;
-
-const headlineModel = genAI.getGenerativeModel({
+const enhanceHeadlineModel = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  systemInstruction: `You will be given a Headline for a blog article and you are to improve the headline, using the following information as a guide ${headlineGuide} 
-    you are to give me only 3 headline no addtional information Just the improved title`,
+  systemInstruction: `You will be given a Headline for a blog article and you are to improve the headline, using the 
+  following information as a guide ${headlineGuide} 
+    you are to give me only one headline no addtional information Just the improved title`,
+});
+const generateHeadlineModel = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: `You will be given a blog article and you are to generate a headline for it, using the 
+  following information as a guide ${headlineGuide} 
+    you are to give me only one headline no addtional information Just the improved title`,
 });
 
-const contentModel = genAI.getGenerativeModel({
+const enhanceContentModel = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  systemInstruction: `You will be given a headline for a blog article you are to generate blog article for that headline`,
+  systemInstruction: `You will be given a blog article you are to improve the blog article 
+  using the following as guide to improve the blog post ${contentGuide}`,
+});
+
+const generateContentModel = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: `You will be given a blog Title and you are to generate a blog article for that title, 
+    and make sure you use the guide I am about to give you this is the Guide:"${contentGuide}"  `,
+});
+const generateKeywordsModel = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: `You will be given a blog Title or a blog content and you are to generate a bunch of keywords for them and 
+  group them into 10 short keywords and 10 longtail keywords only`,
 });
 // Generating prompts
+async function enhanceHeadline(prompt) {
+  try {
+    const result = await enhanceHeadlineModel.generateContent(prompt);
+    return result;
+  } catch (error) {
+    console.error("Error generating Title:", error);
+    throw error;
+  }
+}
 async function generateHeadline(prompt) {
   try {
-    const result = await headlineModel.generateContent(prompt);
+    const result = await generateHeadlineModel.generateContent(prompt);
+    return result;
+  } catch (error) {
+    console.error("Error generating Title:", error);
+    throw error;
+  }
+}
+async function enhanceContent(prompt) {
+  try {
+    const result = await enhanceContentModel.generateContent(prompt);
     return result;
   } catch (error) {
     console.error("Error generating Title:", error);
@@ -42,7 +67,16 @@ async function generateHeadline(prompt) {
 
 async function generateContent(prompt) {
   try {
-    const result = await contentModel.generateContent(prompt);
+    const result = await generateContentModel.generateContent(prompt);
+    return result;
+  } catch (error) {
+    console.error("Error generating Content:", error);
+    throw error;
+  }
+}
+async function generatekeywords(prompt) {
+  try {
+    const result = await generateKeywordsModel.generateContent(prompt);
     return result;
   } catch (error) {
     console.error("Error generating Content:", error);
@@ -50,4 +84,10 @@ async function generateContent(prompt) {
   }
 }
 
-module.exports = { generateHeadline, generateContent };
+module.exports = {
+  enhanceHeadline,
+  generateContent,
+  enhanceContent,
+  generateHeadline,
+  generatekeywords
+};
