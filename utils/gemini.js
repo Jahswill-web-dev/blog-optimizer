@@ -37,10 +37,10 @@ const generateKeywordsModel = genAI.getGenerativeModel({
   group them into 10 short keywords and 10 longtail keywords only`,
 });
 // Generating prompts
-async function enhanceHeadline(prompt) {
+async function enhanceHeadline(title) {
   try {
-    const result = await enhanceHeadlineModel.generateContent(prompt);
-    return result;
+    const result = await enhanceHeadlineModel.generateContent(title);
+    return result.response.candidates[0].content.parts[0].text;
   } catch (error) {
     console.error("Error generating Title:", error);
     throw error;
@@ -49,7 +49,7 @@ async function enhanceHeadline(prompt) {
 async function generateHeadline(prompt) {
   try {
     const result = await generateHeadlineModel.generateContent(prompt);
-    return result;
+    return result.response.candidates[0].content.parts[0].text;
   } catch (error) {
     console.error("Error generating Title:", error);
     throw error;
@@ -58,7 +58,7 @@ async function generateHeadline(prompt) {
 async function enhanceContent(prompt) {
   try {
     const result = await enhanceContentModel.generateContent(prompt);
-    return result;
+    return result.response.candidates[0].content.parts[0].text;
   } catch (error) {
     console.error("Error generating Title:", error);
     throw error;
@@ -68,7 +68,7 @@ async function enhanceContent(prompt) {
 async function generateContent(prompt) {
   try {
     const result = await generateContentModel.generateContent(prompt);
-    return result;
+    return result.response.candidates[0].content.parts[0].text;
   } catch (error) {
     console.error("Error generating Content:", error);
     throw error;
@@ -77,7 +77,7 @@ async function generateContent(prompt) {
 async function generatekeywords(prompt) {
   try {
     const result = await generateKeywordsModel.generateContent(prompt);
-    return result;
+    return result.response.candidates[0].content.parts[0].text;
   } catch (error) {
     console.error("Error generating Content:", error);
     throw error;
@@ -89,5 +89,5 @@ module.exports = {
   generateContent,
   enhanceContent,
   generateHeadline,
-  generatekeywords
+  generatekeywords,
 };
